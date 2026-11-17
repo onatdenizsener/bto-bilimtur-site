@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /api/
+Disallow: /panel/
+Sitemap: https://www.btotravel.com/sitemap.xml

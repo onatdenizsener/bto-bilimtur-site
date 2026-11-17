@@ -1,0 +1,8 @@
+{
+  "name": "bto-kurumsal",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  }
+}
