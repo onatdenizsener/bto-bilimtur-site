@@ -1,5 +1,5 @@
-__pycache__/
-*.pyc
-shots/
-preview/
+node_modules
+dist
 .vercel
+.env*
+shots
