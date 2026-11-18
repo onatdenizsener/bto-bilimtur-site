@@ -9,7 +9,7 @@ flixgamestudios.com ile aynı yöntem: **React 18 + Vite 5**, bütün içerik te
 | Renkler ve düzen | `src/styles.css` (başta renk değişkenleri) |
 | Form gönderimi (e-posta) | `api/lead.js` (Vercel fonksiyonu) |
 
-Eski Python sürümü (3 paket) `eski-surum` etiketinde duruyor: `git checkout eski-surum`.
+Eski Python sürümü (3 paket) `eski-surum` dalında duruyor.
 
 ## Yerelde çalıştırmak
 ```
