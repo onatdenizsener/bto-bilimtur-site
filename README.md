@@ -31,7 +31,7 @@ npm run build && BTO_MEMORY_STORE=1 ADMIN_PASSWORD=test node kaynak/devserver.mj
 ## Şu anki yayın
 Canlı önizleme: https://bto-bilimtur-site-premium.vercel.app (Vercel projesi `bto-bilimtur-site-premium`, Root Directory = `dist/premium`).
 Her değişiklikten sonra `./kaynak/yayin-klasoru.sh` çalıştır, `dist/premium` ile birlikte push'la; Vercel kendisi yayınlar.
-`bto-bilimtur-site-baslangic` ve `bto-bilimtur-site-kurumsal` projeleri eski sürüme aitti, Vercel'den silinebilir.
+`bto-bilimtur-site-baslangic` ve `bto-bilimtur-site-kurumsal` projeleri eski sürüme aitti; `dist/baslangic` ve `dist/kurumsal` klasörleri onları premium adrese yönlendirir. İstenirse Vercel'den silinebilirler.
 
 ## Yayın (yeni bir Vercel projesiyle, isteğe bağlı)
 1. vercel.com/new → GitHub ile giriş → `bto-bilimtur-site` reposunu seç. Ayarlar `vercel.json`'da hazır. Eski projede "Root Directory" `dist/...` ise boşaltın.
