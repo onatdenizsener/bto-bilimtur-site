@@ -28,7 +28,12 @@ npm run dev                                   # sadece görünüm, http://localh
 npm run build && BTO_MEMORY_STORE=1 ADMIN_PASSWORD=test node kaynak/devserver.mjs 4180   # formlar ve panel dahil
 ```
 
-## Yayın (bir kere)
+## Şu anki yayın
+Canlı önizleme: https://bto-bilimtur-site-premium.vercel.app (Vercel projesi `bto-bilimtur-site-premium`, Root Directory = `dist/premium`).
+Her değişiklikten sonra `./kaynak/yayin-klasoru.sh` çalıştır, `dist/premium` ile birlikte push'la; Vercel kendisi yayınlar.
+`bto-bilimtur-site-baslangic` ve `bto-bilimtur-site-kurumsal` projeleri eski sürüme aitti, Vercel'den silinebilir.
+
+## Yayın (yeni bir Vercel projesiyle, isteğe bağlı)
 1. vercel.com/new → GitHub ile giriş → `bto-bilimtur-site` reposunu seç. Ayarlar `vercel.json`'da hazır. Eski projede "Root Directory" `dist/...` ise boşaltın.
 2. **Kayıt deposu (panel için şart):** Vercel → Project → Storage → Upstash for Redis → Create → projeye bağla. `KV_REST_API_URL` ve `KV_REST_API_TOKEN` kendiliğinden eklenir.
 3. Settings → Environment Variables:
