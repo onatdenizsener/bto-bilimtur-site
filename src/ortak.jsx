@@ -10,6 +10,8 @@ export const waLink = (metin) => `https://wa.me/${FIRMA.whatsapp}?text=${encodeU
 export const azHareket = () => matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export async function gonder(veri) {
+  // Önizleme sayfasında sunucu yok: talep gönderilmiş gibi gösterilir (VITE_DEMO=1)
+  if (import.meta.env.VITE_DEMO) return new Promise((r) => setTimeout(r, 700))
   const r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(veri) })
   if (!r.ok) throw new Error('gonderilemedi')
 }
@@ -191,11 +193,12 @@ export function Alt() {
 }
 
 export function AltCubuk() {
+  const { git } = useYol()
   return (
     <div className="alt-cubuk">
       <a href={`tel:${FIRMA.tel}`}><Ikon ad="tel" boyut={20} /> Ara</a>
       <a href={waLink('Merhaba, fiyat almak istiyorum.')}><Ikon ad="wa" boyut={20} /> WhatsApp</a>
-      <a href="#fiyat" onClick={(e) => { const b = document.getElementById('fiyat'); if (b) { e.preventDefault(); b.scrollIntoView({ block: 'center' }) } else { e.preventDefault(); location.href = '/iletisim' } }}>Fiyat iste</a>
+      <a href="#fiyat" onClick={(e) => { const b = document.getElementById('fiyat'); if (b) { e.preventDefault(); b.scrollIntoView({ block: 'center' }) } else { e.preventDefault(); git('/iletisim') } }}>Fiyat iste</a>
     </div>
   )
 }
