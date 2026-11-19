@@ -36,7 +36,7 @@ export default function Acilis() {
   if (durum === 'yok') return null
   return (
     <div ref={ref} className={`acilis-ekran ${durum}`} onClick={() => setDurum('kapaniyor')} aria-hidden="true">
-      <Logo className="acilis-logo" />
+      <Logo koyuZemin className="acilis-logo" />
     </div>
   )
 }

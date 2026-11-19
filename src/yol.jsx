@@ -27,8 +27,19 @@ export function YolSaglayici({ children }) {
     if (temiz !== yol) {
       if (HASH) location.hash = yoldanHash(temiz)
       else history.pushState(null, '', hedef)
-      setYol(temiz)
-      if (!hash) scrollTo(0, 0)
+      // Sayfa geçişi: lacivert perde BTO halkasıyla iner, sayfa altında değişir, perde kalkar
+      const kok = document.documentElement
+      const azMi = matchMedia('(prefers-reduced-motion: reduce)').matches || kok.classList.contains('durdu')
+      const degistir = () => {
+        setYol(temiz)
+        if (!hash) { window.__lenis ? window.__lenis.scrollTo(0, { immediate: true, force: true }) : scrollTo(0, 0) }
+      }
+      if (azMi) degistir()
+      else {
+        kok.classList.remove('gecis'); void kok.offsetWidth; kok.classList.add('gecis')
+        setTimeout(degistir, 380)
+        setTimeout(() => kok.classList.remove('gecis'), 1000)
+      }
     }
     if (hash) setTimeout(() => document.getElementById(hash)?.scrollIntoView(), 50)
   }

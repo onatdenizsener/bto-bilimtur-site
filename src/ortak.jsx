@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import Ikon from './Ikon.jsx'
-import Sahne from './Sahne.jsx'
+import Foto from './Foto.jsx'
 import Logo from './Logo.jsx'
 import { L, useYol } from './yol.jsx'
 import { useIcerik } from './icerik.jsx'
@@ -48,16 +48,18 @@ export function Duyuru() {
 export function Ust() {
   const [acik, setAcik] = useState(false)
   const { yol } = useYol()
+  const cekmece = useCekmece()
   useEffect(() => setAcik(false), [yol])
   return (
     <header className="ust">
       <div className="kap ust-ic">
-        <L to="/" className="logo" aria-label="BTO Bilimtur ana sayfa"><Logo key={yol} className="logo-ust" /></L>
+        <L to="/" className="logo" aria-label="BTO Bilimtur ana sayfa"><Logo key={yol} koyuZemin className="logo-ust" /></L>
         <nav className={acik ? 'menu acik' : 'menu'} aria-label="Ana menü">
           {MENU.map(([h, a]) => <L key={h} to={h} aria-current={yol.startsWith(h) ? 'page' : undefined}>{a}</L>)}
           <L to="/iletisim" className="menu-iletisim" aria-current={yol === '/iletisim' ? 'page' : undefined}>İletişim</L>
         </nav>
-        <a className="ust-tel" href={`tel:${FIRMA.tel}`}><Ikon ad="tel" boyut={18} /> {FIRMA.telGoster}</a>
+        <a className="ust-tel" href={`tel:${FIRMA.tel}`}>{FIRMA.telGoster}</a>
+        <button type="button" className="dugme dugme-ana ust-fiyat" onClick={() => cekmece.ac()}>Fiyat iste</button>
         <button className="menu-dugme" aria-expanded={acik} aria-label={acik ? 'Menüyü kapat' : 'Menüyü aç'} onClick={() => setAcik(!acik)}>
           <span /><span /><span />
         </button>
@@ -123,19 +125,43 @@ export function Bilet({ baslangic = {}, varsayilanTur = 'ucak' }) {
   )
 }
 
-// İç sayfaların başı: başlık + sahne
-export function SayfaBasi({ baslik, metin, sahne, children }) {
+// İç sayfaların başı: tam genişlik fotoğraf, üstünde büyük başlık
+export function SayfaBasi({ baslik, metin, foto, children, ust }) {
   return (
-    <section className="sayfa-basi">
+    <section className={`sayfa-basi ${foto ? 'fotolu' : ''}`}>
+      {foto && <Foto ad={foto} className="sayfa-basi-foto" yukle="eager" />}
       <div className="kap sayfa-basi-ic">
-        <div className="sayfa-basi-metin">
-          <h1>{baslik}</h1>
-          {metin && <p>{metin}</p>}
-          {children}
-        </div>
-        {sahne && <Sahne ad={sahne} className="sayfa-basi-sahne giris-sahne" />}
+        {ust && <p className="sayfa-ust">{ust}</p>}
+        <h1 className="satirlar"><span className="satir"><span>{baslik}</span></span></h1>
+        {metin && <p className="sayfa-basi-metin">{metin}</p>}
+        {children}
       </div>
     </section>
+  )
+}
+
+const CekmeceCtx = createContext({ ac: () => {} })
+export const useCekmece = () => useContext(CekmeceCtx)
+
+export function CekmeceSaglayici({ children }) {
+  const dlg = useRef(null)
+  const [bas, setBas] = useState({})
+  const ac = (ayar = {}) => { setBas({ ...ayar, n: Date.now() }); dlg.current?.showModal() }
+  const kapat = () => dlg.current?.close()
+  return (
+    <CekmeceCtx.Provider value={{ ac }}>
+      {children}
+      <dialog ref={dlg} className="cekmece" aria-label="Fiyat isteyin" onClick={(e) => e.target === dlg.current && kapat()}>
+        <div className="cekmece-ic">
+          <div className="cekmece-bas">
+            <h2>Fiyat isteyin</h2>
+            <button type="button" className="cekmece-kapat" onClick={kapat} aria-label="Kapat">×</button>
+          </div>
+          <p>Nereye, ne zaman, kaç kişi? Aynı gün içinde sizi arayıp fiyatı söyleyelim. Yazmak istemezseniz: <a href={`tel:${FIRMA.tel}`}>{FIRMA.telGoster}</a></p>
+          <Bilet key={bas.n} varsayilanTur={bas.tur || 'ucak'} baslangic={bas.nereye ? { tur: bas.tur, nereye: bas.nereye } : {}} />
+        </div>
+      </dialog>
+    </CekmeceCtx.Provider>
   )
 }
 
@@ -204,12 +230,12 @@ export function Alt() {
 }
 
 export function AltCubuk() {
-  const { git } = useYol()
+  const cekmece = useCekmece()
   return (
     <div className="alt-cubuk">
       <a href={`tel:${FIRMA.tel}`}><Ikon ad="tel" boyut={20} /> Ara</a>
       <a href={waLink('Merhaba, fiyat almak istiyorum.')}><Ikon ad="wa" boyut={20} /> WhatsApp</a>
-      <a href="#fiyat" onClick={(e) => { const b = document.getElementById('fiyat'); if (b) { e.preventDefault(); b.scrollIntoView({ block: 'center' }) } else { e.preventDefault(); git('/iletisim') } }}>Fiyat iste</a>
+      <button type="button" onClick={() => cekmece.ac()}>Fiyat iste</button>
     </div>
   )
 }
