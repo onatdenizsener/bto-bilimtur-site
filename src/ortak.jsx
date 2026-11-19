@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import Ikon from './Ikon.jsx'
 import Foto from './Foto.jsx'
 import Logo from './Logo.jsx'
+import YerSecici from './YerSecici.jsx'
 import { L, useYol } from './yol.jsx'
 import { useIcerik } from './icerik.jsx'
 import { FIRMA, MENU, TALEP_TURLERI, SSS } from './data.js'
@@ -71,19 +72,23 @@ export function Ust() {
 // Biniş kartı şeklindeki fiyat isteme formu
 export function Bilet({ baslangic = {}, varsayilanTur = 'ucak' }) {
   const [tur, setTur] = useState(baslangic.tur || varsayilanTur)
-  const [form, setForm] = useState({ nereden: '', nereye: '', tarih: '', kisi: 1, ad: '', telefon: '', ...baslangic })
+  const [form, setForm] = useState({ nereden: '', nereye: '', tarih: '', kisi: 1, ad: '', telefon: '', mesaj: '', ...baslangic })
   const [durum, setDurum] = useState('bos')
   const secili = TALEP_TURLERI.find((t) => t.id === tur)
   const var_ = (a) => secili.alanlar.includes(a)
   const degis = (k) => (e) => setForm({ ...form, [k]: e.target.value })
   const ozet = `${secili.ad}: ${form.nereden || ''} → ${form.nereye || ''}, ${form.tarih || 'tarih yok'}, ${form.kisi} kişi. ${form.ad}, ${form.telefon}`
   const kod = (s, v) => buyuk(s || v).replace(/[^A-ZÇĞİÖŞÜ]/g, '').slice(0, 3) || v
+  // Uçak sekmesinde havalimanı seçicinin verdiği gerçek kodlar (ESB, AYT...)
+  const yerKod = (yer, metin, v) => (tur === 'ucak' && yer?.iata ? yer.iata : kod(metin, v))
+  const yerSec = (alan) => (y) => setForm((f) => ({ ...f, [alan + 'Yer']: y.iata ? y : null, [alan]: y.iata ? `${y.ad} (${y.iata})` : y.metin }))
 
   useEffect(() => { if (baslangic.nereye !== undefined) { setForm((f) => ({ ...f, ...baslangic })); if (baslangic.tur) setTur(baslangic.tur) } }, [baslangic.nereye, baslangic.tur])
 
   async function yolla(e) {
     e.preventDefault(); setDurum('gidiyor')
-    try { await gonder({ tip: secili.ad, ...form }); setDurum('tamam') } catch { setDurum('hata') }
+    const { neredenYer, nereyeYer, ...veri } = form
+    try { await gonder({ tip: secili.ad, ...veri }); setDurum('tamam') } catch { setDurum('hata') }
   }
   const ikon = tur === 'transfer' || tur === 'arac' ? 'minibus' : tur === 'tur' ? 'balon' : tur === 'otel' ? 'yatak' : 'ucak'
 
@@ -97,8 +102,13 @@ export function Bilet({ baslangic = {}, varsayilanTur = 'ucak' }) {
           ))}
         </div>
         <div className="alanlar">
-          {var_('nereden') && <label className="alan"><span>Nereden</span><input value={form.nereden} onChange={degis('nereden')} placeholder="Ankara" autoComplete="off" /></label>}
-          {var_('nereye') && <label className="alan"><span>Nereye</span><input value={form.nereye} onChange={degis('nereye')} placeholder={tur === 'transfer' ? 'Esenboğa Havalimanı' : 'Antalya'} autoComplete="off" /></label>}
+          {tur === 'ucak' ? <>
+            <YerSecici etiket="Nereden" deger={form.neredenYer || { metin: form.nereden }} onSec={yerSec('nereden')} yerTutucu="Ankara" />
+            <YerSecici etiket="Nereye" deger={form.nereyeYer || { metin: form.nereye }} onSec={yerSec('nereye')} yerTutucu="Şehir ya da havalimanı" />
+          </> : <>
+            {var_('nereden') && <label className="alan"><span>Nereden</span><input value={form.nereden} onChange={degis('nereden')} placeholder="Ankara" autoComplete="off" /></label>}
+            {var_('nereye') && <label className="alan"><span>Nereye</span><input value={form.nereye} onChange={degis('nereye')} placeholder={tur === 'transfer' ? 'Esenboğa Havalimanı' : 'Antalya'} autoComplete="off" /></label>}
+          </>}
           {var_('tarih') && <label className="alan"><span>Tarih</span><input type="date" value={form.tarih} onChange={degis('tarih')} /></label>}
           {var_('kisi') && <label className="alan"><span>Kişi</span><input type="number" min="1" max="200" value={form.kisi} onChange={degis('kisi')} /></label>}
           <label className="alan"><span>Adınız</span><input required value={form.ad} onChange={degis('ad')} autoComplete="name" /></label>
@@ -108,9 +118,9 @@ export function Bilet({ baslangic = {}, varsayilanTur = 'ucak' }) {
       </div>
       <div className="bilet-kocan" aria-live="polite">
         <div className="kocan-rota" aria-hidden="true">
-          <span key={'a' + kod(form.nereden, 'ANK')} className="kod">{kod(form.nereden, 'ANK')}</span>
+          <span key={'a' + yerKod(form.neredenYer, form.nereden, 'ANK')} className="kod">{yerKod(form.neredenYer, form.nereden, 'ANK')}</span>
           <span className="kocan-cizgi"><Ikon ad={ikon} boyut={24} /></span>
-          <span key={'b' + kod(form.nereye, '???')} className="kod">{kod(form.nereye, '???')}</span>
+          <span key={'b' + yerKod(form.nereyeYer, form.nereye, '???')} className="kod">{yerKod(form.nereyeYer, form.nereye, '???')}</span>
         </div>
         <dl className="kocan-bilgi">
           <div><dt>Tarih</dt><dd>{form.tarih ? new Date(form.tarih).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }) : '—'}</dd></div>
@@ -157,8 +167,10 @@ export function CekmeceSaglayici({ children }) {
             <h2>Fiyat isteyin</h2>
             <button type="button" className="cekmece-kapat" onClick={kapat} aria-label="Kapat">×</button>
           </div>
-          <p>Nereye, ne zaman, kaç kişi? Aynı gün içinde sizi arayıp fiyatı söyleyelim. Yazmak istemezseniz: <a href={`tel:${FIRMA.tel}`}>{FIRMA.telGoster}</a></p>
-          <Bilet key={bas.n} varsayilanTur={bas.tur || 'ucak'} baslangic={bas.nereye ? { tur: bas.tur, nereye: bas.nereye } : {}} />
+          {bas.ucus
+            ? <div className="cekmece-ucus"><p className="cekmece-ucus-bas">Seçtiğiniz uçuş</p>{bas.ucus}<p className="kucuk-not">Gösterilen fiyat havayolunun anlık fiyatıdır. BTO’nun size söyleyeceği fiyat hizmet bedeli ve koltuk durumuna göre değişebilir.</p></div>
+            : <p>Nereye, ne zaman, kaç kişi? Aynı gün içinde sizi arayıp fiyatı söyleyelim. Yazmak istemezseniz: <a href={`tel:${FIRMA.tel}`}>{FIRMA.telGoster}</a></p>}
+          <Bilet key={bas.n} varsayilanTur={bas.tur || 'ucak'} baslangic={bas.form || (bas.nereye ? { tur: bas.tur, nereye: bas.nereye } : {})} />
         </div>
       </dialog>
     </CekmeceCtx.Provider>

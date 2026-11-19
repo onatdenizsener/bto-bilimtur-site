@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Ikon from './Ikon.jsx'
 import Foto, { FOTOLAR } from './Foto.jsx'
 import Pano from './Pano.jsx'
+import UcusArama from './Ucus.jsx'
 import { Halka } from './Logo.jsx'
 import { L } from './yol.jsx'
 import { useIcerik } from './icerik.jsx'
@@ -352,6 +353,7 @@ export function UcakBileti() {
   return (
     <>
       <SayfaBasi ust="Hizmetler" baslik="Uçak bileti" metin="Yurt içi ve yurt dışı bütün havayolları. En uygun uçuşu bulur, değişiklik ve iadeyi sizin yerinize yaparız." foto="ucak" />
+      <UcusArama />
       <section className="bolum"><div className="kap iki">
         <Gorun><h2>Bilet aldıktan sonra da yanınızdayız</h2><p className="bolum-giris">İnternetten bilet almak kolay. Uçuş iptal olunca, saat değişince ya da bagaj sorunu çıkınca aranacak bir numaranız olması ise kolay değil.</p></Gorun>
         <Maddeler liste={[

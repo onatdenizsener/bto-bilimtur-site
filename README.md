@@ -57,3 +57,11 @@ Depo ve e-posta ayarı yokken form "gönderilemedi" der ve ziyaretçiye WhatsApp
 `public/foto/*.webp`, Adobe Stock'tan ücretsiz, Standart lisansla alındı (19.11.2026, BTO'nun Adobe hesabı). Lisans geçmişi: stock.adobe.com > Lisans geçmişi.
 Yeni fotoğraf: `python3 kaynak/foto.py <klasör>` (eşleme scriptin içinde). Fotoğrafı olmayan yerde aynı yerin çizimi gösterilir.
 Standart lisans fotoğrafın sitede kullanılmasına izin verir, dosyaların ayrıca dağıtılmasına değil. Bu yüzden repoyu private yapın.
+
+## Amadeus: havalimanı arama ve canlı uçuş fiyatları
+- **Havalimanı seçici** (`src/YerSecici.jsx`, `api/yer.js`): fiyat formunun Uçak sekmesinde ve uçuş aramada. Anahtar yoksa `api/_havalimanlari.js` içindeki yerel listeden arar, yani bugün de çalışır.
+- **Canlı uçuş fiyatları** (`src/Ucus.jsx`, `api/ucus.js`): Uçak bileti sayfasında. Yalnız anahtar tanımlıyken görünür.
+  Havayoluna yönlendiren bağlantılar kapalı (`disable_deep_links=TRUE`). Müşteri "BTO'dan iste" der, seçtiği uçuş talebe yazılır, panelde görünür.
+- Anahtar: https://eu1.ironcladapp.com/public-launch/6aaa463f6f95614fe0f6db9d formuyla alınır (Amadeus kullanım şartları kabul edilir).
+  Vercel > Settings > Environment Variables: `AMADEUS_API_KEY` (gerekirse `AMADEUS_GATEWAY_URL`). Anahtar yalnız sunucuda kalır. Ekledikten sonra Redeploy.
+- Yerel deneme (anahtarsız): `node kaynak/sahte-amadeus.mjs 4199` ve devserver'ı `AMADEUS_GATEWAY_URL=http://localhost:4199 AMADEUS_API_KEY=deneme` ile çalıştırın.
