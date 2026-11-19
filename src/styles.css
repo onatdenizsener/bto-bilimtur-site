@@ -448,7 +448,8 @@ html.durdu *, html.durdu *::before, html.durdu *::after { animation-play-state: 
 .halka-don .halka-isinlar { animation: don-sonsuz 1.4s linear infinite; }
 @keyframes don-sonsuz { to { transform: rotate(360deg); } }
 .ucus-hata { color: var(--kirmizi-koyu); font-weight: 600; padding-left: 18px; }
-.ucus-bos { font-size: 1.1rem; }
+.ucus-bos { font-size: 1.1rem; display: grid; gap: 1rem; justify-items: start; }
+.ucus-bos p { margin: 0; max-width: 60ch; }
 .ucus-sayi { color: var(--gri); font-weight: 600; }
 .ucus-liste { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 12px; }
 .ucus-kart { display: grid; grid-template-columns: 1fr 220px; background: #fff; border-radius: 14px; overflow: hidden; animation: belir .5s var(--yumusak) both; animation-delay: calc(var(--i) * 45ms); transition: box-shadow .25s; }

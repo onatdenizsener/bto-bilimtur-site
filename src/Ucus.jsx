@@ -88,6 +88,16 @@ export default function UcusArama() {
     })
   }
 
+  const rotaIste = () => cekmece.ac({
+    tur: 'ucak',
+    form: {
+      tur: 'ucak', neredenYer: nereden, nereyeYer: nereye,
+      nereden: `${nereden.ad} (${nereden.iata})`, nereye: `${nereye.ad} (${nereye.iata})`,
+      tarih: gidis, kisi: yetiskin + cocuk,
+      mesaj: `Gidiş ${gidis}${gidisDonus && donus ? `, dönüş ${donus}` : ' (tek yön)'}, ${yetiskin} yetişkin${cocuk ? `, ${cocuk} çocuk` : ''}. Sitede çevrimiçi fiyat çıkmadı.`,
+    },
+  })
+
   return (
     <section className="bolum ucus-bolum" id="canli-fiyatlar">
       <div className="kap">
@@ -116,7 +126,10 @@ export default function UcusArama() {
           {durum === 'araniyor' && <div className="ucus-bekle"><Halka boyut={56} kare={false} className="halka-don" /><span>Havayolları soruluyor…</span></div>}
           {durum === 'hata' && <ul className="ucus-hata">{hata.map((h) => <li key={h}>{h}</li>)}</ul>}
           {durum === 'tamam' && !sonuc.teklifler.length && (
-            <p className="ucus-bos">Bu tarihlerde uçuş bulunamadı. Bizi arayın, size başka tarih ya da aktarmalı bir seçenek bulalım.</p>
+            <div className="ucus-bos">
+              <p>Bu rota ve tarihler için çevrimiçi fiyat gelmedi. Talebinizi bırakın, BTO ekibi uygun uçuşu ve fiyatı sizin için çıkarsın.</p>
+              <button type="button" className="dugme dugme-ana" onClick={rotaIste}>Bu rotayı BTO'ya sor</button>
+            </div>
           )}
           {durum === 'tamam' && sonuc.teklifler.length > 0 && (
             <>
