@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises'
 import { extname, join, normalize } from 'node:path'
 
 const kok = join(import.meta.dirname, '..')
-const dist = join(kok, 'dist')
+const dist = join(kok, 'build')
 const port = Number(process.argv[2] || 4180)
 const TIP = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp' }
 

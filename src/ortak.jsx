@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Ikon from './Ikon.jsx'
 import Sahne from './Sahne.jsx'
+import Logo from './Logo.jsx'
 import { L, useYol } from './yol.jsx'
 import { useIcerik } from './icerik.jsx'
 import { FIRMA, MENU, TALEP_TURLERI, SSS } from './data.js'
@@ -51,7 +52,7 @@ export function Ust() {
   return (
     <header className="ust">
       <div className="kap ust-ic">
-        <L to="/" className="logo" aria-label="BTO Bilimtur ana sayfa"><span className="logo-bto">BTO</span> <span className="logo-ad">Bilimtur</span></L>
+        <L to="/" className="logo" aria-label="BTO Bilimtur ana sayfa"><Logo key={yol} className="logo-ust" /></L>
         <nav className={acik ? 'menu acik' : 'menu'} aria-label="Ana menü">
           {MENU.map(([h, a]) => <L key={h} to={h} aria-current={yol.startsWith(h) ? 'page' : undefined}>{a}</L>)}
           <L to="/iletisim" className="menu-iletisim" aria-current={yol === '/iletisim' ? 'page' : undefined}>İletişim</L>
@@ -115,7 +116,7 @@ export function Bilet({ baslangic = {}, varsayilanTur = 'ucak' }) {
         </dl>
         {durum === 'tamam'
           ? <p className="sonuc">Talebiniz geldi. Bugün içinde sizi arayıp fiyatı söyleyeceğiz.</p>
-          : <button className="dugme dugme-sari" disabled={durum === 'gidiyor'}>{durum === 'gidiyor' ? 'Gönderiliyor…' : 'Fiyat iste'}</button>}
+          : <button className="dugme dugme-ana" disabled={durum === 'gidiyor'}>{durum === 'gidiyor' ? 'Gönderiliyor…' : 'Fiyat iste'}</button>}
         {durum === 'hata' && <p className="sonuc hata">Talep gönderilemedi. <a href={waLink(ozet)}>WhatsApp’tan gönderin</a> ya da <a href={`tel:${FIRMA.tel}`}>{FIRMA.telGoster}</a> numarasını arayın.</p>}
       </div>
     </form>
@@ -169,12 +170,21 @@ export function FiyatBandi({ baslik = 'Nereye gideceğinizi söyleyin, fiyatı b
   )
 }
 
+function HareketDugmesi() {
+  const [durdu, setDurdu] = useState(() => { try { return localStorage.getItem('bto-hareket') === 'durdu' } catch { return false } })
+  useEffect(() => {
+    document.documentElement.classList.toggle('durdu', durdu)
+    try { localStorage.setItem('bto-hareket', durdu ? 'durdu' : 'acik') } catch {}
+  }, [durdu])
+  return <button type="button" className="hareket-dugme" aria-pressed={durdu} onClick={() => setDurdu(!durdu)}>{durdu ? 'Animasyonları başlat' : 'Animasyonları durdur'}</button>
+}
+
 export function Alt() {
   return (
     <footer className="alt">
       <div className="kap alt-ic">
         <div>
-          <L to="/" className="logo"><span className="logo-bto">BTO</span> <span className="logo-ad">Bilimtur</span></L>
+          <L to="/" className="logo" aria-label="BTO Bilimtur ana sayfa"><Logo koyuZemin /></L>
           <p>{FIRMA.unvan}</p><p>{FIRMA.adres}</p><p>TÜRSAB belge no: {FIRMA.tursab}</p>
         </div>
         <nav className="alt-menu" aria-label="Alt menü">
@@ -186,6 +196,7 @@ export function Alt() {
           <p><a href={`mailto:${FIRMA.mail}`}>{FIRMA.mail}</a></p>
           <p>{FIRMA.saatler}</p>
           <p className="alt-telif">© {new Date().getFullYear()} {FIRMA.ad}</p>
+          <HareketDugmesi />
         </div>
       </div>
     </footer>

@@ -20,7 +20,7 @@ function Giris({ onGiris }) {
     <form className="panel-giris" onSubmit={gir}>
       <h1>BTO panel</h1>
       <label className="alan"><span>Şifre</span><input type="password" value={s} onChange={(e) => setS(e.target.value)} autoFocus required /></label>
-      <button className="dugme dugme-sari">Giriş yap</button>
+      <button className="dugme dugme-ana">Giriş yap</button>
       {hata && <p className="panel-hata" role="alert">{hata}</p>}
       <a href="/">Siteye dön</a>
     </form>
@@ -102,7 +102,7 @@ export default function Panel() {
                 )
               })}</tbody>
             </table>
-            <button className="dugme dugme-sari" onClick={kaydet}>Değişiklikleri kaydet</button>
+            <button className="dugme dugme-ana" onClick={kaydet}>Değişiklikleri kaydet</button>
           </>
         )}
 
@@ -111,7 +111,7 @@ export default function Panel() {
             <label className="panel-onay"><input type="checkbox" checked={hal.duyuru.acik} onChange={(e) => duyuruDegis('acik', e.target.checked)} /> Duyuru şeridini göster</label>
             <label className="alan"><span>Duyuru metni</span><input value={hal.duyuru.metin} onChange={(e) => duyuruDegis('metin', e.target.value)} /></label>
             <label className="alan"><span>Tıklayınca gideceği sayfa (boş bırakılabilir)</span><input value={hal.duyuru.link} placeholder="/turlar/kapadokya" onChange={(e) => duyuruDegis('link', e.target.value)} /></label>
-            <button className="dugme dugme-sari" onClick={kaydet}>Değişiklikleri kaydet</button>
+            <button className="dugme dugme-ana" onClick={kaydet}>Değişiklikleri kaydet</button>
           </div>
         )}
         {durum && <p className="panel-durum" role="status">{durum}</p>}

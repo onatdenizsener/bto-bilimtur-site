@@ -2,6 +2,7 @@ import { useEffect, lazy, Suspense } from 'react'
 import { YolSaglayici, useYol } from './yol.jsx'
 import { IcerikSaglayici } from './icerik.jsx'
 import { Ust, Alt, AltCubuk, Duyuru } from './ortak.jsx'
+import Acilis from './Acilis.jsx'
 import * as S from './sayfalar.jsx'
 import { FIRMA } from './data.js'
 
@@ -34,6 +35,7 @@ function Site() {
   if (yol === '/panel') return <Suspense fallback={null}><Panel /></Suspense>
   return (
     <>
+      <Acilis />
       {FIRMA.onizleme && <div className="onizleme">Tasarım önizlemesidir. Bilgiler henüz firma tarafından onaylanmadı.</div>}
       <Duyuru />
       <Ust />

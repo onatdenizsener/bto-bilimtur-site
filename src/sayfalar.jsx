@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Ikon from './Ikon.jsx'
 import Sahne, { GirisSahne } from './Sahne.jsx'
+import { Halka } from './Logo.jsx'
 import { L } from './yol.jsx'
 import { useIcerik } from './icerik.jsx'
 import {
-  Bilet, Gorun, SayfaBasi, Sorular, Adimlar, FiyatBandi, useGorun, waLink, gonder,
+  Bilet, Gorun, SayfaBasi, Sorular, Adimlar, FiyatBandi, useGorun, waLink, gonder, azHareket,
 } from './ortak.jsx'
 import {
   FIRMA, HIZMETLER, KATEGORILER, FILO, TRANSFER_ADIMLARI, VIZE, VIZE_NOT, VIZE_ADIMLARI, KURUMSAL, SAYILAR, SSS,
@@ -40,7 +41,7 @@ export function AnaSayfa() {
         <GirisSahne />
         <div className="kap giris-ic">
           <div className="giris-metin">
-            <h1>Ankara’dan nereye?</h1>
+            <h1 className="satirlar"><span className="satir"><span>Ankara’dan</span></span> <span className="satir"><span style={{ '--i': 1 }}>nereye?</span></span></h1>
             <p>Uçak bileti, otel, transfer ve tur. Nereye gideceğinizi yazın, gerisini biz ayarlayalım. {FIRMA.kurulus}’ten beri Ankara’dayız.</p>
             <p className="giris-ara">Yazmakla uğraşmayın: <a href={`tel:${FIRMA.tel}`}>{FIRMA.telGoster}</a></p>
           </div>
@@ -80,16 +81,58 @@ export function AnaSayfa() {
   )
 }
 
+// Logodaki "O" halkası sayfa kaydıkça döner; sayılar görünce sayar
+function DonenHalka() {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (azHareket()) return
+    let kare = 0
+    const cevir = () => {
+      kare = 0
+      const el = ref.current
+      if (!el || document.documentElement.classList.contains('durdu')) return
+      const r = el.getBoundingClientRect()
+      el.style.transform = `rotate(${(innerHeight - r.top) * 0.25}deg)`
+    }
+    const kaydir = () => { if (!kare) kare = requestAnimationFrame(cevir) }
+    cevir()
+    addEventListener('scroll', kaydir, { passive: true })
+    return () => { removeEventListener('scroll', kaydir); cancelAnimationFrame(kare) }
+  }, [])
+  return <div ref={ref} className="donen-halka"><Halka boyut={260} kare={false} ic={36} dis={49} sayi={96} /></div>
+}
+
+function Sayac({ hedef }) {
+  const [ref, ic] = useGorun()
+  const [n, setN] = useState(azHareket() ? hedef : 0)
+  useEffect(() => {
+    if (!ic || azHareket()) { if (ic) setN(hedef); return }
+    let bas, k
+    const adim = (t) => {
+      bas ??= t
+      const o = Math.min(1, (t - bas) / 1400)
+      setN(Math.round(hedef * (1 - Math.pow(1 - o, 3))))
+      if (o < 1) k = requestAnimationFrame(adim)
+    }
+    k = requestAnimationFrame(adim)
+    return () => cancelAnimationFrame(k)
+  }, [ic, hedef])
+  return <span ref={ref}>{n}</span>
+}
+
 function Neden() {
   const yil = new Date().getFullYear() - FIRMA.kurulus
   return (
     <section className="bolum bolum-koyu neden">
       <div className="kap neden-ic">
-        <Gorun><p className="neden-yil" aria-hidden="true">{FIRMA.kurulus}</p></Gorun>
+        <div className="neden-isaret" aria-hidden="true">
+          <DonenHalka />
+          <p className="neden-yil">{FIRMA.kurulus}</p>
+        </div>
         <Gorun>
           <h2>{yil} yıldır aynı numarada</h2>
           <p>Bizi aradığınızda karşınıza bir çağrı merkezi değil, biletinizi kesen kişi çıkar. Uçuşunuz değişirse siz fark etmeden biz arıyoruz.</p>
-          <dl className="sayilar">{SAYILAR.map(([s, a]) => <div key={a}><dt>{a}</dt><dd>{s}</dd></div>)}</dl>
+          <dl className="sayilar">{SAYILAR.map(([s, a]) => <div key={a}><dt>{a}</dt><dd><Sayac hedef={Number(s)} /></dd></div>)}</dl>
         </Gorun>
       </div>
     </section>
@@ -360,7 +403,7 @@ function GeriAramaFormu({ baslik = 'Sizi arayalım', tip = 'İletişim formu', m
       <label className="onay"><input type="checkbox" required /> <span>Bilgilerimin bana dönüş yapmak için kullanılmasını kabul ediyorum. <L to="/kvkk">Aydınlatma metni</L></span></label>
       {durum === 'tamam'
         ? <p className="sonuc">Mesajınız geldi. En geç bir iş günü içinde sizi arayacağız.</p>
-        : <button className="dugme dugme-sari" disabled={durum === 'gidiyor'}>{durum === 'gidiyor' ? 'Gönderiliyor…' : 'Gönder'}</button>}
+        : <button className="dugme dugme-ana" disabled={durum === 'gidiyor'}>{durum === 'gidiyor' ? 'Gönderiliyor…' : 'Gönder'}</button>}
       {durum === 'hata' && <p className="sonuc hata">Mesaj gönderilemedi. <a href={`tel:${FIRMA.tel}`}>{FIRMA.telGoster}</a> numarasını arayın.</p>}
     </form>
   )
