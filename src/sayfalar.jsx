@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Ikon from './Ikon.jsx'
-import Foto from './Foto.jsx'
+import Foto, { FOTOLAR } from './Foto.jsx'
 import Pano from './Pano.jsx'
 import { Halka } from './Logo.jsx'
 import { L } from './yol.jsx'
@@ -38,7 +38,7 @@ export function AnaSayfa() {
         </div>
       </section>
 
-      <Rotalar turlar={turlar.filter((t) => t.gorunur && t.foto)} />
+      <Rotalar turlar={turlar.filter((t) => t.gorunur && FOTOLAR[t.foto])} />
       <HizmetIndeks />
       <Neden />
 

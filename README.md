@@ -52,3 +52,8 @@ Depo ve e-posta ayarı yokken form "gönderilemedi" der ve ziyaretçiye WhatsApp
 - Görseller çizimdir. Firmanın gerçek fotoğrafları gelince `Sahne` yerine fotoğraf konabilir.
 - `onizleme: false` yap; `index.html` içindeki `noindex` satırını ve `vercel.json` içindeki `X-Robots-Tag` başlığını sil.
 - Alan adı: Vercel → Settings → Domains → `btotravel.com`, `www.btotravel.com`. Mevcut site o anda kapanır, geçişi firmayla planla.
+
+## Fotoğraflar
+`public/foto/*.webp`, Adobe Stock'tan ücretsiz, Standart lisansla alındı (19.11.2026, BTO'nun Adobe hesabı). Lisans geçmişi: stock.adobe.com > Lisans geçmişi.
+Yeni fotoğraf: `python3 kaynak/foto.py <klasör>` (eşleme scriptin içinde). Fotoğrafı olmayan yerde aynı yerin çizimi gösterilir.
+Standart lisans fotoğrafın sitede kullanılmasına izin verir, dosyaların ayrıca dağıtılmasına değil. Bu yüzden repoyu private yapın.
