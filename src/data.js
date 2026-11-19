@@ -81,7 +81,7 @@ export const TURLAR = [
     ozet: 'Uçak, otel ve vize dosyası birlikte.',
     uzun: ['Şehri siz seçin; uçağı, merkezi bir oteli ve vize dosyanızı biz hazırlayalım. Müze ve şehir turu biletlerini de ekleyebiliriz.'],
     dahil: ['Uçak ve otel', 'Vize dosyası hazırlığı', 'İsteğe bağlı müze biletleri'], program: [] },
-  { id: 'gunubirlik', foto: '', saat: '08:30', pano: 'SAFRANBOLU', panoNot: 'GÜNÜBİRLİK', kat: 'yurtici', sahne: 'yol', ad: 'Ankara çıkışlı günübirlik', sure: '1 gün', kalkis: 'Ankara', yer: 'Beypazarı, Safranbolu, Gordion',
+  { id: 'gunubirlik', foto: 'yol', saat: '08:30', pano: 'SAFRANBOLU', panoNot: 'GÜNÜBİRLİK', kat: 'yurtici', sahne: 'yol', ad: 'Ankara çıkışlı günübirlik', sure: '1 gün', kalkis: 'Ankara', yer: 'Beypazarı, Safranbolu, Gordion',
     ozet: 'Sabah çıkın, akşam dönün. Okul ve kurum grupları için.',
     uzun: ['Kendi araçlarımız ve şoförlerimizle Ankara çevresinin en güzel günübirlik rotaları. Grup büyüklüğüne göre araç ayarlıyoruz.'],
     dahil: ['Şoförlü araç', 'Rehber', 'Grup büyüklüğüne göre araç'], program: [] },
